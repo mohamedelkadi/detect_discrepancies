@@ -2,6 +2,7 @@ require "bundler/setup"
 require "bundler/setup"
 require "detect_discrepancies"
 require "detect_discrepancies/remote_campaign"
+require "detect_discrepancies/detect_campaign_discrepancies"
 require "detect_discrepancies/detect_single_ad_discrepancies"
 require 'webmock/rspec'
 
