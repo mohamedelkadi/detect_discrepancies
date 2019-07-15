@@ -1,40 +1,40 @@
 module DetectDiscrepancies
   class RemoteCampaign
-    class << self
-      def find_by_external_ref(external_ref)
-        res_body = fetch_data(external_ref)
+    Ad = Struct.new(:reference, :status, :description)
 
-        initialize_from_response(res_body)
+    attr_reader :api_url, :ads
+
+    def initialize(api_url)
+      @api_url = api_url
+      @ads = {}
+      fetch_ads
+    end
+
+    def find_ad(ref)
+      ads.fetch ref
+    end
+
+    private
+
+    def fetch_ads
+      res_body = fetch_data
+
+      initialize_from_response(res_body)
+    end
+
+    def initialize_from_response(res_body)
+      res_body['ads'].each do |ad|
+        @ads[ad['reference']] = Ad.new(ad['reference'],
+                                       ad['status'],
+                                       ad['description'])
       end
+    end
 
-      private
+    def fetch_data
+      uri = URI(api_url)
+      res = Net::HTTP.get_response(uri)
 
-      def initialize_from_response(res_body)
-        remote_campaign = new
-
-        properties.each do |prop|
-          remote_campaign.instance_exec do
-            define_singleton_method(prop) { res_body[prop.to_s] }
-          end
-        end
-
-        remote_campaign
-      end
-
-      def fetch_data(external_ref)
-        uri = URI("#{api_url}/#{external_ref}")
-        res = Net::HTTP.get_response(uri)
-
-        JSON.parse(res.body)
-      end
-
-      def api_url
-        Configuration.api_url
-      end
-
-      def properties
-        Configuration.checked_properties
-      end
+      JSON.parse(res.body)
     end
   end
 end

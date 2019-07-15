@@ -1,24 +1,17 @@
 RSpec.describe DetectDiscrepancies::RemoteCampaign do
   before do
-    DetectDiscrepancies::Configuration.api_url = 'http://dummy.com'
-    DetectDiscrepancies::Configuration.checked_properties = %i[status ad_description]
+    body = '{ "ads": [ { "reference": "1", "status": "enabled", "description": "Description for campaign 11" }, { "reference": "2", "status": "disabled", "description": "Description for campaign 12" }, { "reference": "3", "status": "enabled", "description": "Description for campaign 13" } ] }'
 
-    stub_request(:get, 'http://dummy.com/ref-1').to_return(body: {remote_reference: 'ref-1',
-                                                      status: 'active',
-                                                      ad_description: 'Good One'}.to_json)
+    stub_request(:get, 'http://dummy.com/ref-1').to_return(body: body)
   end
 
-  describe '.find_by_external_ref' do
+  describe '#fetch_ads' do
     subject {
-      described_class.find_by_external_ref('ref-1')
+      described_class.new('http://dummy.com/ref-1')
     }
 
     it 'returns instance of RemoteCampaign' do
-      expect(subject).to be_a(described_class)
-    end
-
-    it 'returns instance of RemoteCampaign' do
-      expect(subject.status).to eq('active')
+      expect(subject.find_ad('1').reference).to eq('1')
     end
   end
 end
