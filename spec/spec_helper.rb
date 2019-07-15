@@ -1,5 +1,10 @@
 require "bundler/setup"
+require "bundler/setup"
 require "detect_discrepancies"
+require "detect_discrepancies/configuration"
+require "detect_discrepancies/remote_campaign"
+require "detect_discrepancies/remote_campaign"
+require 'webmock/rspec'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

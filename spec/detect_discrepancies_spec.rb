@@ -19,14 +19,18 @@ RSpec.describe DetectDiscrepancies do
       }
     end
 
-    it 'accept block and pass the Configuration class to it ' do
+    it 'accepts block and pass the Configuration class to it ' do
       expect { |blk| described_class.configure(&blk) }.to yield_with_args(DetectDiscrepancies::Configuration)
     end
 
-    it 'set the api_url value' do
+    it 'sets the api_url value' do
       described_class.configure(&blk)
 
       expect(DetectDiscrepancies::Configuration.api_url).to eq('https:://sample.example')
+    end
+
+    it 'sets the checked_properties value' do
+      expect(DetectDiscrepancies::Configuration.checked_properties).to eq( %i[ x y ])
     end
   end
 end
