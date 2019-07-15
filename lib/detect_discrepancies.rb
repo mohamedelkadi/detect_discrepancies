@@ -10,6 +10,6 @@ module DetectDiscrepancies
   end
 
 
-  class Error < StandardError
+  class ServiceNotAvailable < StandardError
   end
 end

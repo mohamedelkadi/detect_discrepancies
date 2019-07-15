@@ -34,6 +34,8 @@ module DetectDiscrepancies
       uri = URI(api_url)
       res = Net::HTTP.get_response(uri)
 
+      raise ServiceNotAvailable unless res.is_a?(Net::HTTPSuccess)
+
       JSON.parse(res.body)
     end
   end
