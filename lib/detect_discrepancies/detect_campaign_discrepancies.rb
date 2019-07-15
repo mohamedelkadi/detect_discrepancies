@@ -11,15 +11,28 @@ module DetectDiscrepancies
 
     def detect_discrepancies
       local_campaign.map do |local_ad|
-        ref = local_ad.external_reference
-        remote_ad = remote_campaign.find_ad(ref)
+        remote_ad = find_remote_ad(local_ad)
+        next not_exist_error(local_ad) if remote_ad.nil?
 
-        { remote_reference: ref,
-          discrepancies: single_ad_discrepancies(local_ad, remote_ad) }
+        discrepancies_hash(local_ad, remote_ad)
       end
     end
 
     private
+
+    def find_remote_ad(local_ad)
+      remote_campaign.find_ad(local_ad.external_reference)
+    end
+
+    def discrepancies_hash(local_ad, remote_ad)
+      { remote_reference: local_ad.external_reference,
+        discrepancies: single_ad_discrepancies(local_ad, remote_ad) }
+    end
+
+    def not_exist_error(local_ad)
+      { remote_reference: local_ad.external_reference,
+        error: 'Not exist' }
+    end
 
     def single_ad_discrepancies(local_ad, remote_ad)
       DetectSingleAdDiscrepancies

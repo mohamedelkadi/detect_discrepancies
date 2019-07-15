@@ -11,7 +11,7 @@ module DetectDiscrepancies
     end
 
     def find_ad(ref)
-      ads.fetch ref
+      ads[ref]
     end
 
     private
