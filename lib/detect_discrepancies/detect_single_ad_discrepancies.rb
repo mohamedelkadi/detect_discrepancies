@@ -20,16 +20,16 @@ module DetectDiscrepancies
     def detect_status_discrepancies
       return if local_ad.status == remote_ad.status
 
-      discrepancies.push(status: { remote: remote_ad.status,
-                                   local: local_ad.status })
+      discrepancies.push({status: { remote: remote_ad.status,
+                                   local: local_ad.status }})
     end
 
     def detect_description_discrepancies
       return if local_ad.ad_description == remote_ad.description
 
-      discrepancies.push(description: { remote: remote_ad.description,
-                                        local: local_ad.ad_description
-      })
+      discrepancies.push({ description: { remote: remote_ad.description,
+                                          local: local_ad.ad_description
+      } })
     end
   end
 end
